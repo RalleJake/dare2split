@@ -16,9 +16,11 @@ function handler (request, response) {
 io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
-
+	console.log('user connected');
 	socket.on('send:coords', function (data) {
 		socket.broadcast.emit('load:coords', data);
+		console.log('lat:'+data.coords[0].lat+', long:'+data.coords[0].lng)
+		
 	});
 });
 

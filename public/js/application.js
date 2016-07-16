@@ -3,23 +3,8 @@ $(function() {
 	var userId = Math.random().toString(16).substring(2,15);
 	var socket = io.connect('/');
 	var map;
-
 	var info = $('#infobox');
 	var doc = $(document);
-
-	// custom marker's icon styles
-	var tinyIcon = L.Icon.extend({
-		options: {
-			shadowUrl: '../assets/marker-shadow.png',
-			iconSize: [25, 39],
-			iconAnchor:   [12, 36],
-			shadowSize: [41, 41],
-			shadowAnchor: [12, 38],
-			popupAnchor: [0, -30]
-		}
-	});
-	var redIcon = new tinyIcon({ iconUrl: '../assets/marker-red.png' });
-	var yellowIcon = new tinyIcon({ iconUrl: '../assets/marker-yellow.png' });
 
 	var sentData = {};
 
@@ -43,27 +28,32 @@ $(function() {
 		$('.map').text('Your browser is out of fashion, there\'s no geolocation!');
 	}
 
+
+	function initMap(lat, lng) {
+		var myLatLng = {lat: lat, lng: lng};
+
+		// Create a map object and specify the DOM element for display.
+		var map = new google.maps.Map(document.getElementById('map'), {
+			center: myLatLng,
+			scrollwheel: false,
+			zoom: 15
+		});
+
+		// Create a marker and set its position.
+		var marker = new google.maps.Marker({
+			map: map,
+			position: myLatLng,
+			title: 'Hello World!'
+		});
+	}
+
 	function positionSuccess(position) {
 		var lat = position.coords.latitude;
 		var lng = position.coords.longitude;
 		var acr = position.coords.accuracy;
+		$('.coords').text('lat: '+lat+', long: '+lng);
 
-		// mark user's position
-		var userMarker = L.marker([lat, lng], {
-			icon: redIcon
-		});
-		// uncomment for static debug
-		// userMarker = L.marker([51.45, 30.050], { icon: redIcon });
-
-		// load leaflet map
-		map = L.map('map');
-
-		L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-i87786ca/{z}/{x}/{y}.png', { maxZoom: 18, detectRetina: true }).addTo(map);
-
-		// set map bounds
-		map.fitWorld();
-		userMarker.addTo(map);
-		userMarker.bindPopup('<p>You are there! Your ID is ' + userId + '</p>').openPopup();
+		initMap(lat, lng);
 
 		var emit = $.now();
 		// send coords on when user is active

@@ -1,5 +1,7 @@
 * { margin: 0; padding: 0; border: 0; }
 
+#mapid { height: 180px; }
+
 body {
 	background: url('../assets/grey.png') #f2f2f2;
 	color: #666;
