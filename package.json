@@ -1,16 +1,17 @@
 {
   "name": "geotest",
   "subdomain": "geotest",
-  "author": "Dmitri Voronianski <dmitri.voronianski@gmail.com>",
+  "author": "Rasmus Jakobsson",
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js"
   },
   "version": "0.0.3-1",
   "engines": {
     "node": ">= 0.8.x"
   },
   "dependencies": {
-    "socket.io": "latest",
-    "node-static": "latest"
+    "ip": "^1.1.3",
+    "node-static": "latest",
+    "socket.io": "latest"
   }
 }

@@ -2,9 +2,11 @@ $(function() {
 	// generate unique user id
 	var userId = Math.random().toString(16).substring(2,15);
 	var socket = io.connect('/');
-	var map;
+	var gMap;
 	var info = $('#infobox');
 	var doc = $(document);
+
+
 
 	var sentData = {};
 
@@ -33,7 +35,7 @@ $(function() {
 		var myLatLng = {lat: lat, lng: lng};
 
 		// Create a map object and specify the DOM element for display.
-		var map = new google.maps.Map(document.getElementById('map'), {
+		gMap = new google.maps.Map(document.getElementById('map'), {
 			center: myLatLng,
 			scrollwheel: false,
 			zoom: 15
@@ -41,7 +43,7 @@ $(function() {
 
 		// Create a marker and set its position.
 		var marker = new google.maps.Marker({
-			map: map,
+			map: gMap,
 			position: myLatLng,
 			title: 'Hello World!'
 		});
@@ -108,13 +110,17 @@ $(function() {
 		});
 	}
 
-	// delete inactive users every 15 sec
-	setInterval(function() {
-		for (var ident in connects){
-			if ($.now() - connects[ident].updated > 15000) {
-				delete connects[ident];
-				map.removeLayer(markers[ident]);
-			}
-		}
-	}, 15000);
+	updateCurrentPos = function () {
+		navigator.geolocation.getCurrentPosition(function (p) {
+			var lat = p.coords.latitude;
+			var lng = p.coords.longitude;
+			$('.coords').text('lat: '+lat+', long: '+lng);
+			var marker = new google.maps.Marker({
+				position: { lat: p.coords.latitude, lng: p.coords.longitude },
+				map: gMap,
+				title: 'marker'
+			});
+		})
+	}
+
 });
